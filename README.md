@@ -863,24 +863,6 @@ export default function App() {
 
 ---
 
-## 14) README Snippet (for your repo)
-
-```
-# Foundit (React Native CLI)
-A weekend PoC: Lost & Found tracker with camera + GPS + SQLite.
-
-## Features
-- Capture item photo
-- Auto-tag GPS (when available)
-- Local SQLite storage
-- Search & filter, mark resolved
-
-## Tech
-React Native CLI • react-native-vision-camera • react-native-geolocation-service • react-native-sqlite-storage • React Navigation
-```
-
----
-
 ## 15) Roadmap (Post-PoC)
 
 - Map view + radius filter
@@ -889,7 +871,3 @@ React Native CLI • react-native-vision-camera • react-native-geolocation-ser
 - Cloud sync & auth
 - OCR for text on documents
 - Duplicate detection / similarity search
-
----
-
-If you want, I can **package this into a starter repo blueprint** (commands + files you can paste) or tailor it to **Android-only** for fastest success on your machine.
