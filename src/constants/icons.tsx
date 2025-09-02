@@ -31,4 +31,18 @@ export const AppIcons = {
       color={color}
     />
   ),
+  camera: (size?: number, color?: string) => (
+    <Feather
+      name="camera"
+      size={size ?? 32}
+      color={color ?? Colors.gray}
+    />
+  ),
+  gallery: (size?: number, color?: string) => (
+    <Feather
+      name="image"
+      size={size ?? 28}
+      color={color ?? Colors.gray}
+    />
+  ),
 }
