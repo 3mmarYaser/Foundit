@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, StyleSheet, View } from 'react-native'
+import { TextInput, StyleSheet, View, ViewStyle } from 'react-native'
 import { Colors } from '../theme/Colors'
 
 type Props = {
@@ -8,6 +8,8 @@ type Props = {
   onChangeText: (text: string) => void
   multiline?: boolean
   bold?: boolean
+  containerStyle?: ViewStyle | ViewStyle[]
+  inputStyle?: ViewStyle | ViewStyle[]
 }
 
 const InputField = ({
@@ -16,12 +18,15 @@ const InputField = ({
   onChangeText,
   multiline,
   bold,
+  containerStyle,
+  inputStyle,
 }: Props) => {
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <TextInput
         style={[
           styles.input,
+          inputStyle,
           multiline && styles.multiline,
           bold && styles.bold,
         ]}
@@ -36,12 +41,7 @@ const InputField = ({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 8,
-  },
   input: {
-    // borderWidth: 1,
-    // borderColor: Colors.gray,
     backgroundColor: Colors.white,
     padding: 12,
     borderRadius: 8,
