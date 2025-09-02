@@ -30,4 +30,9 @@ export const Colors = {
   textSecondary: '#757575',
   accent: '#E53935', // LOST badge
   placeholder: '#E0E0E0', // image placeholder
+
+  //
+
+  gray: '#888',
+  lightGray: '#ccc',
 }
