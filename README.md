@@ -12,14 +12,25 @@ Lost & Found tracker with camera + GPS + SQLite.
 - Remote Firebase integration
 - Search & filter, mark resolved
 
-### Tech stack
+### Tech Choices
 
-React Native CLI • `react-native-vision-camera` • `react-native-image-picker` • `react-native-geolocation-service` • React Navigation • `react-native-sqlite-storage` • `react-native-vector-icons`
+- **RN CLI** (no Expo).
+- **Navigation:** `@react-navigation/native` (Stack).
+- **Camera:** `react-native-vision-camera` • `react-native-image-picker`.
+- **Location:** `react-native-geolocation-service`.
+- **DB:** `react-native-sqlite-storage` (promise API).
+- **State:** lightweight Context.
+
+### Future plan
+
+- Map integration: Swap list/map views.
+- Push notifications, chat between users.
+- OCR / similarity matching.
 
 ---
 ---
 
-## 1) Business Foundations
+## Business Foundations
 
 ### Problem
 
@@ -56,7 +67,7 @@ A fast, offline-first mobile app to **snap a photo**, **auto-tag GPS**, and **st
 
 ---
 
-## 2) Scope & Feature Set
+## Scope & Feature Set
 
 ### MVP (Weekend)
 
@@ -72,15 +83,9 @@ A fast, offline-first mobile app to **snap a photo**, **auto-tag GPS**, and **st
 - **Multiple photos** per item.
 - **Image compression** before save.
 
-### Out of Scope (Future)
-
-- Cloud sync / auth / public marketplace.
-- Push notifications, chat between users.
-- OCR / similarity matching.
-
 ---
 
-## 3) User Stories & Acceptance Criteria
+## User Stories & Acceptance Criteria
 
 1. **Create Found Item**
 
@@ -104,7 +109,7 @@ A fast, offline-first mobile app to **snap a photo**, **auto-tag GPS**, and **st
 
 ---
 
-## 4) Data Model (SQLite)
+## Data Model (SQLite)
 
 ### Tables
 
@@ -142,28 +147,7 @@ FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 
 ---
 
-## 5) Architecture & Tech Choices
-
-- **RN CLI** (no Expo).
-- **Navigation:** `@react-navigation/native` (Stack).
-- **Camera:** `react-native-vision-camera`.
-- **Location:** `react-native-geolocation-service`.
-- **DB:** `react-native-sqlite-storage` (promise API).
-- **State:** lightweight Context or Zustand; keep server-less.
-- **Utils:** `date-fns` for formatting (optional).
-
----
-
-## 9) UX Notes (fast wireframe guidance)
-
-- **Home/List:** Search bar; filter chips (Lost/Found/Open/Resolved); card list with thumbnail, title, coords.
-- **FAB “＋”** → Camera; after capture → AddItem form.
-- **Details:** Large image; text; coords; “Mark Resolved”.
-- **(Optional) Map:** Swap list/map tabs if you add `react-native-maps`.
-
----
-
-## 10) Privacy & Security
+## Privacy & Security
 
 - **Local-only** data in SQLite (no PII beyond user’s text).
 - Show clear **permission prompts** explaining value.
@@ -171,7 +155,7 @@ FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 
 ---
 
-## 11) Testing Checklist (manual)
+## Testing Checklist (manual)
 
 - Permission flows: camera allowed/denied; location allowed/denied.
 - Create Lost and Found entries with/without GPS.
@@ -181,7 +165,7 @@ FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 
 ---
 
-## 12) Performance & Reliability
+## Performance & Reliability
 
 - Resize/compress images if you see sluggishness (future: `react-native-compressor`).
 - Keep list images to \~64–96px thumbnails for smooth scrolling.
@@ -189,7 +173,7 @@ FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 
 ---
 
-## 15) Roadmap (Post-PoC)
+## Roadmap (Post-PoC)
 
 - Map view + radius filter
 - Multiple photos, categories UI
