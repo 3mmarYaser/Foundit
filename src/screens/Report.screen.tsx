@@ -1,28 +1,27 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, Text, Pressable, ScrollView, Alert } from 'react-native'
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
-import Geolocation from '@react-native-community/geolocation'
 
+import AppContext from '../providers/AppContext'
 import TopBar from '../components/TopBar'
 import ImagePicker from '../components/ImagePicker'
 import InputField from '../components/InputField'
 import PrimaryButton from '../components/PrimaryButton'
-import { ItemType, ItemToInsert } from '../types/Item'
+import { ItemTypes } from '../domain/entities/Item'
 import { styles } from './Report.style'
 import { LatLong } from '../types/LatLong'
-import {
-  requestCameraPermission,
-  requestLocationPermission,
-  requestStoragePermission,
-} from '../helpers/Permissions.android'
 import { AppIcons } from '../constants/icons'
 import { Colors } from '../theme/Colors'
 import { ActiveTab } from '../types/Tab'
+import { capturePhoto } from '../helpers/Camera'
+import { pickImageFromGallery } from '../helpers/Gallery'
+import { detectLocation } from '../helpers/Location'
 
 //
 
 const ReportItemScreen = ({ route, navigation }: any) => {
-  const [type, setType] = useState<ItemType>(route.params.type)
+  const { addItem }: any = useContext(AppContext)
+
+  const [type, setType] = useState<string>(route.params.type)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
@@ -32,80 +31,56 @@ const ReportItemScreen = ({ route, navigation }: any) => {
   //
 
   const handleCaptureImage = async () => {
-    const hasCamera = await requestCameraPermission()
-
-    if (hasCamera) {
-      const result = await launchCamera({ mediaType: 'photo' })
-
-      if (result.assets && result.assets[0]?.uri) {
-        setPhotoUri(result.assets[0].uri)
-      }
-    } else {
-      Alert.alert('Camera permission denied')
-    }
+    const photo = await capturePhoto()
+    setPhotoUri(photo)
   }
 
   //
 
   const handlePickFromGallery = async () => {
-    const hasStorage = await requestStoragePermission()
+    const image = await pickImageFromGallery()
+    setPhotoUri(image)
+  }
 
-    if (hasStorage) {
-      const result = await launchImageLibrary({ mediaType: 'photo' })
+  //
 
-      if (result.assets && result.assets[0]?.uri) {
-        setPhotoUri(result.assets[0].uri)
+  const handleDetectLocation = async () => {
+    const location = await detectLocation()
+    setLocation(location)
+  }
+
+  //
+
+  const handleSubmit = async () => {
+    if (!title.trim() || !photoUri) {
+      Alert.alert('Validation', 'Title and photo are required!')
+      return
+    }
+
+    try {
+      const newItem = {
+        type,
+        title,
+        description,
+        category,
+        status: 'open',
+        latitude: location?.lat,
+        longitude: location?.long,
+        photo_uri: photoUri,
       }
-    } else {
-      Alert.alert('Storage permission denied')
+
+      const id = await addItem(newItem)
+
+      navigation.goBack()
+    } catch (error) {
+      console.error(error)
+      Alert.alert('Error', 'Failed to save item.')
     }
   }
 
   //
-
-  // Location Picker (later replace with map UI)
-  const handlePickLocation = async () => {
-    const hasLocation = await requestLocationPermission()
-
-    if (hasLocation) {
-      Geolocation.getCurrentPosition(
-        position => {
-          const { latitude, longitude } = position.coords
-          setLocation({ lat: latitude, long: longitude })
-        },
-        error => {
-          Alert.alert('Error getting location: ' + error.message)
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 10000,
-        },
-      )
-    } else {
-      setLocation({ lat: 30.0444, long: 31.2357 }) // Cairo coords
-      Alert.alert('Location permission denied')
-    }
-  }
-
   //
-
-  const handleSubmit = () => {
-    const newItem: ItemToInsert = {
-      type,
-      title,
-      description: description,
-      category: category,
-      photo_uri: photoUri ?? '',
-      latitude: location?.lat,
-      longitude: location?.long,
-    }
-
-    console.log('Report submitted:', newItem)
-    // TODO: Save to DB + capture photo + location
-
-    navigation.goBack()
-  }
+  //
 
   return (
     <>
@@ -116,13 +91,13 @@ const ReportItemScreen = ({ route, navigation }: any) => {
         <ScrollView contentContainerStyle={styles.formWrapper}>
           {/* Type Selector */}
           <View style={styles.typesContainer}>
-            {Object.values(ItemType).map(value => (
+            {Object.values(ItemTypes).map(value => (
               <Pressable
                 key={value}
                 style={[
                   styles.option,
                   type == value
-                    ? value == ItemType.Found
+                    ? value == ItemTypes.Found
                       ? styles.found
                       : styles.lost
                     : null,
@@ -136,7 +111,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
 
           {/* Image Picker */}
           <ImagePicker
-            tab={type == ItemType.Found ? ActiveTab.Found : ActiveTab.Lost}
+            tab={type == 'found' ? ActiveTab.Found : ActiveTab.Lost}
             photoUri={photoUri}
             onPickCamera={handleCaptureImage}
             onPickGallery={handlePickFromGallery}
@@ -167,7 +142,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
 
           {/* Location */}
           <Pressable
-            onPress={handlePickLocation}
+            onPress={handleDetectLocation}
             style={[
               styles._dashed_border,
               styles.placeholderView,
