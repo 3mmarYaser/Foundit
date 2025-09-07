@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
-import { Item, ItemStatus, ItemType } from '../types/Item'
+import { Item, ItemTypes } from '../domain/entities/Item'
 import { Colors } from '../theme/Colors'
 import { AppIcons } from '../constants/icons'
 
@@ -16,17 +16,19 @@ const ItemCard: React.FC<Props> = ({ item, onPress }) => {
       onPress={onPress}
     >
       {/* Thumbnail */}
-      {/* <Image
-        source={{ uri: item.photo_uri }}
-        style={styles.thumbnail}
-        resizeMode="cover"
-      /> */}
-
-      <View style={styles.image}>
-        {item.type == ItemType.Found
-          ? AppIcons.found(48, Colors.secondaryLight)
-          : AppIcons.lost(48, Colors.dangerLight)}
-      </View>
+      {item.photo_uri ? (
+        <Image
+          source={{ uri: item.photo_uri }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={styles.image}>
+          {item.type == ItemTypes.Found
+            ? AppIcons.found(48, Colors.secondaryLight)
+            : AppIcons.lost(48, Colors.dangerLight)}
+        </View>
+      )}
 
       {/* Content */}
       <View style={styles.content}>
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.surface,
     borderRadius: 16,
-    marginVertical: 8,
+    marginVertical: 6,
     marginHorizontal: 8,
     overflow: 'hidden',
     // Android shadow
