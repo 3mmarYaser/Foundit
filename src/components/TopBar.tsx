@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Colors } from '../theme/Colors'
 import AppContext from '../providers/AppContext'
-import { ItemType } from '../types/Item'
+import { ItemTypes } from '../domain/entities/Item'
 
 interface TopBarProps {
   title?: string
@@ -19,13 +19,13 @@ const TopBar: React.FC<TopBarProps> = ({ title }) => {
           {
             color: title
               ? Colors.primary
-              : activeTab == ItemType.Found
+              : activeTab == ItemTypes.Found
               ? Colors.secondary
               : Colors.danger,
           },
         ]}
       >
-        {title ?? (activeTab == ItemType.Found ? 'Found it' : 'Lost it')}
+        {title ?? (activeTab == ItemTypes.Found ? 'Found it' : 'Lost it')}
       </Text>
     </View>
   )
