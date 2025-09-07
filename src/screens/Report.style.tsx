@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   formWrapper: {
-    flex: 1,
     gap: 16,
     paddingBottom: 16,
   },

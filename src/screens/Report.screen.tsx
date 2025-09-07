@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
-import { View, Text, Pressable, ScrollView, Alert } from 'react-native'
+import { View, Text, Pressable, Alert } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import AppContext from '../providers/AppContext'
 import TopBar from '../components/TopBar'
@@ -87,8 +88,13 @@ const ReportItemScreen = ({ route, navigation }: any) => {
       <TopBar title="Report an Item" />
 
       <View style={styles.container}>
-        {/* Form */}
-        <ScrollView contentContainerStyle={styles.formWrapper}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.formWrapper}
+          enableOnAndroid={true}
+          extraScrollHeight={20} // pushes content up a bit more
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           {/* Type Selector */}
           <View style={styles.typesContainer}>
             {Object.values(ItemTypes).map(value => (
@@ -150,7 +156,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
                 ? {
                     borderColor: Colors.primaryLight,
                   }
-                : '',
+                : undefined,
             ]}
           >
             {AppIcons.location(32, location ? Colors.primary : Colors.gray)}
@@ -163,7 +169,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
                       color: Colors.primary,
                       fontWeight: 'bold',
                     }
-                  : '',
+                  : undefined,
               ]}
             >
               {location
@@ -171,7 +177,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
                 : 'Click to pick location'}
             </Text>
           </Pressable>
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         <PrimaryButton
           title="Submit"
