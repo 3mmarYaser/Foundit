@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, Text } from 'react-native'
 
 import TopBar from '../components/TopBar'
 import ItemCard from '../components/ItemCard'
@@ -13,8 +13,7 @@ import { SCREEN_KEYS } from '../navigation/ScreenKeys'
 //
 
 const HomeScreen = ({ navigation }: any) => {
-  const { items, addDummyItem, activeTab, selectTab }: any =
-    useContext(AppContext)
+  const { items, activeTab, selectTab }: any = useContext(AppContext)
 
   const handleOpenDetails = (id: number) => {
     navigation.navigate(SCREEN_KEYS.ItemDetails, { itemId: id })
@@ -28,17 +27,23 @@ const HomeScreen = ({ navigation }: any) => {
     <View style={styles.root}>
       <TopBar />
 
-      <FlatList
-        data={items}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <ItemCard
-            item={item}
-            onPress={() => handleOpenDetails(item.id)}
-          />
-        )}
-        style={styles.list}
-      />
+      {items.length ? (
+        <FlatList
+          data={items}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <ItemCard
+              item={item}
+              onPress={() => handleOpenDetails(item.id)}
+            />
+          )}
+          style={styles.list}
+        />
+      ) : (
+        <View style={styles.noItemsView}>
+          <Text style={styles.noItemsText}>No items yet</Text>
+        </View>
+      )}
 
       <BottomNav
         activeTab={activeTab}
@@ -56,7 +61,17 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    padding: 12,
+    padding: 4,
+  },
+
+  noItemsView: {
+    flex: 1,
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  noItemsText: {
+    margin: 'auto',
+    color: Colors.gray,
   },
 })
 
