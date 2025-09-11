@@ -3,6 +3,10 @@ import AppContext from './AppContext'
 
 import { Item, ItemType } from '../domain/entities/Item'
 import { itemsRepo } from '../data/repos/itemsRepo'
+import { reportItemUC } from '../domain/usecases/ReportItemUC'
+import { updateItemUC } from '../domain/usecases/UpdateItemUC'
+import { removeItemUC } from '../domain/usecases/RemoveItemUC'
+import { toggleResolvedUC } from '../domain/usecases/ToggleResolvedUC'
 
 //
 
@@ -32,7 +36,8 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addItem = useCallback(
     async (item: Item) => {
-      const newItem = await itemsRepo.add(item)
+      const newItem = await reportItemUC(itemsRepo, item)
+
       if (newItem.type === activeTab) {
         setItems(current => [...current, newItem])
       }
@@ -41,14 +46,16 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   )
 
   const updateItem = useCallback(async (item: Item) => {
-    await itemsRepo.update(item)
+    await updateItemUC(itemsRepo, item)
+
     setItems(current =>
       current.map(it => (it.id === item.id ? { ...it, ...item } : it)),
     )
   }, [])
 
   const removeItem = useCallback(async (id: number) => {
-    await itemsRepo.remove(id)
+    await removeItemUC(itemsRepo, id)
+
     setItems(current => current.filter(it => it.id !== id))
   }, [])
 
@@ -58,7 +65,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   )
 
   const toggleResolved = useCallback(async (id: number) => {
-    await itemsRepo.toggleResolved(id)
+    await toggleResolvedUC(itemsRepo, id)
 
     setItems(current =>
       current.map(it =>
