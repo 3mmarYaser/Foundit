@@ -61,7 +61,7 @@ const ItemCard: React.FC<Props> = ({ item, onPress }) => {
           </Text>
 
           <Text style={styles.date}>
-            {new Date(item.created_at).toLocaleDateString()}
+            {new Date(item.created_at).toDateString()}
           </Text>
         </View>
       </View>
