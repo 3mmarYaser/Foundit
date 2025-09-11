@@ -45,4 +45,15 @@ export const itemMapper = {
       updated_at: item.updated_at,
     }
   },
+
+  toRemoteRow(item: Item): ItemRow {
+    return {
+      ...item,
+      description: item.description ?? null,
+      category: item.category ?? 'Unspecified',
+      is_resolved: item.status == 'resolved',
+      latitude: item.latitude ?? null,
+      longitude: item.longitude ?? null,
+    }
+  },
 }
