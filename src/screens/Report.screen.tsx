@@ -7,7 +7,7 @@ import TopBar from '../components/TopBar'
 import ImagePicker from '../components/ImagePicker'
 import InputField from '../components/InputField'
 import PrimaryButton from '../components/PrimaryButton'
-import { ItemTypes } from '../domain/entities/Item'
+import { ItemType, ItemTypes } from '../domain/entities/Item'
 import { styles } from './Report.style'
 import { LatLong } from '../types/LatLong'
 import { AppIcons } from '../constants/icons'
@@ -22,7 +22,7 @@ import { detectLocation } from '../helpers/Location'
 const ReportItemScreen = ({ route, navigation }: any) => {
   const { addItem }: any = useContext(AppContext)
 
-  const [type, setType] = useState<string>(route.params.type)
+  const [type, setType] = useState<ItemType>(route.params.type)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
