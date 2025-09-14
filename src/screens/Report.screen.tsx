@@ -7,15 +7,13 @@ import TopBar from '../components/TopBar'
 import ImagePicker from '../components/ImagePicker'
 import InputField from '../components/InputField'
 import PrimaryButton from '../components/PrimaryButton'
+import LocationDetector from '../components/LocationDetector'
 import { ItemType, ItemTypes } from '../domain/entities/Item'
 import { styles } from './Report.style'
 import { LatLong } from '../types/LatLong'
-import { AppIcons } from '../constants/icons'
-import { Colors } from '../theme/Colors'
 import { ActiveTab } from '../types/Tab'
 import { capturePhoto } from '../helpers/Camera'
 import { pickImageFromGallery } from '../helpers/Gallery'
-import { detectLocation } from '../helpers/Location'
 
 //
 
@@ -41,13 +39,6 @@ const ReportItemScreen = ({ route, navigation }: any) => {
   const handlePickFromGallery = async () => {
     const image = await pickImageFromGallery()
     setPhotoUri(image)
-  }
-
-  //
-
-  const handleDetectLocation = async () => {
-    const location = await detectLocation()
-    setLocation(location)
   }
 
   //
@@ -147,36 +138,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
           />
 
           {/* Location */}
-          <Pressable
-            onPress={handleDetectLocation}
-            style={[
-              styles._dashed_border,
-              styles.placeholderView,
-              location
-                ? {
-                    borderColor: Colors.primaryLight,
-                  }
-                : undefined,
-            ]}
-          >
-            {AppIcons.location(32, location ? Colors.primary : Colors.gray)}
-
-            <Text
-              style={[
-                styles.placeholderText,
-                location
-                  ? {
-                      color: Colors.primary,
-                      fontWeight: 'bold',
-                    }
-                  : undefined,
-              ]}
-            >
-              {location
-                ? `(${location.lat.toFixed(2)}, ${location.long.toFixed(2)})`
-                : 'Click to pick location'}
-            </Text>
-          </Pressable>
+          <LocationDetector onDetect={setLocation} />
         </KeyboardAwareScrollView>
 
         <PrimaryButton
