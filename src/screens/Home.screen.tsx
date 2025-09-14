@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 
-import { View, FlatList, StyleSheet, Text } from 'react-native'
+import { View, FlatList, StyleSheet, Text, RefreshControl } from 'react-native'
 
 import TopBar from '../components/TopBar'
 import ItemCard from '../components/ItemCard'
@@ -13,7 +13,20 @@ import { SCREEN_KEYS } from '../navigation/ScreenKeys'
 //
 
 const HomeScreen = ({ navigation }: any) => {
-  const { items, activeTab, selectTab }: any = useContext(AppContext)
+  const { items, activeTab, selectTab, isSyncing, sync }: any =
+    useContext(AppContext)
+
+  const [refreshing, setRefreshing] = useState(isSyncing)
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true)
+
+    try {
+      await sync()
+    } finally {
+      setRefreshing(false)
+    }
+  }, [])
 
   const handleOpenDetails = (id: number) => {
     navigation.navigate(SCREEN_KEYS.ItemDetails, { itemId: id })
@@ -38,6 +51,16 @@ const HomeScreen = ({ navigation }: any) => {
             />
           )}
           style={styles.list}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              // Android spinner color
+              colors={[Colors.primary, Colors.secondary, Colors.accent]}
+              // iOS spinner color
+              tintColor={Colors.accent}
+            />
+          }
         />
       ) : (
         <View style={styles.noItemsView}>
