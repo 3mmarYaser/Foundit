@@ -5,12 +5,14 @@ type AppContextType = {
   items: Item[]
   loading: boolean
   activeTab: ItemType
+  isSyncing: boolean
   selectTab: (tab: ItemType) => void
   addItem: (item: Item) => void
   updateItem: (item: Item) => void
   removeItem: (id: number) => void
   getItemById: (id: number) => Promise<Item | null>
   toggleResolved: (id: number) => void
+  sync: (tab?: ItemType) => Promise<void>
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType)
