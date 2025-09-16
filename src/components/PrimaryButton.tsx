@@ -1,19 +1,24 @@
 import React from 'react'
-import { Text, StyleSheet, Pressable } from 'react-native'
+import { Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native'
 import { Colors } from '../theme/Colors'
 
 type Props = {
   title: string
+  loading?: boolean
   onPress: () => void
 }
 
-const PrimaryButton = ({ title, onPress }: Props) => {
+const PrimaryButton = ({ title, loading, onPress }: Props) => {
   return (
     <Pressable
       style={styles.button}
       onPress={onPress}
     >
-      <Text style={styles.text}>{title}</Text>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.text}>{title}</Text>
+      )}
     </Pressable>
   )
 }
