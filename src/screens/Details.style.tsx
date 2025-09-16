@@ -71,10 +71,6 @@ export const styles = StyleSheet.create({
   },
   actionBtn: {
     margin: 16,
-    paddingVertical: 14,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
     // Android shadow
     elevation: 3,
     // iOS shadow
@@ -83,17 +79,12 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  actionBtnText: {
-    color: Colors.onPrimary,
-    fontSize: 16,
-    fontWeight: '700',
-  },
 
   resolvedText: {
     textAlign: 'center',
-    marginVertical: 16,
-    color: Colors.primary,
+    margin: 20,
+    color: Colors.gray,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontStyle: 'italic',
   },
 })

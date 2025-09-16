@@ -1,18 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { RootStackParamList } from '../navigation/ScreenKeys'
 import { Colors } from '../theme/Colors'
 import { styles } from './Details.style'
 import AppContext from '../providers/AppContext'
 import { Item, ItemTypes } from '../domain/entities/Item'
+import PrimaryButton from '../components/PrimaryButton'
 
 type ItemDetailsRouteProp = RouteProp<RootStackParamList, 'ItemDetailsScreen'>
 
@@ -53,15 +47,6 @@ const ItemDetailsScreen = () => {
   }, [itemId])
 
   //
-
-  if (loading) {
-    return (
-      <ActivityIndicator
-        size="large"
-        style={{ flex: 1 }}
-      />
-    )
-  }
 
   if (!item) {
     return <Text style={styles.invalidText}>Invalid item id: {itemId}</Text>
@@ -143,7 +128,9 @@ const ItemDetailsScreen = () => {
 
       {/* Bottom Action Button */}
       {item.status == 'open' ? (
-        <Pressable
+        <PrimaryButton
+          title={item.type === ItemTypes.Lost ? 'I Found It' : 'It’s Mine'}
+          loading={loading}
           style={[
             styles.actionBtn,
             {
@@ -152,11 +139,7 @@ const ItemDetailsScreen = () => {
             },
           ]}
           onPress={handleAction}
-        >
-          <Text style={styles.actionBtnText}>
-            {item.type === ItemTypes.Lost ? 'I Found It' : 'It’s Mine'}
-          </Text>
-        </Pressable>
+        />
       ) : (
         <Text style={styles.resolvedText}>Resolved</Text>
       )}
