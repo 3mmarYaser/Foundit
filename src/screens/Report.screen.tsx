@@ -27,6 +27,8 @@ const ReportItemScreen = ({ route, navigation }: any) => {
   const [photoUri, setPhotoUri] = useState<string | null>(null)
   const [location, setLocation] = useState<LatLong | null>(null)
 
+  const [loading, setLoading] = useState(false)
+
   //
 
   const handleCaptureImage = async () => {
@@ -50,6 +52,8 @@ const ReportItemScreen = ({ route, navigation }: any) => {
     }
 
     try {
+      setLoading(true)
+
       const newItem = {
         type,
         title,
@@ -62,6 +66,8 @@ const ReportItemScreen = ({ route, navigation }: any) => {
       }
 
       const id = await addItem(newItem)
+
+      setLoading(false)
 
       navigation.goBack()
     } catch (error) {
@@ -143,6 +149,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
 
         <PrimaryButton
           title="Submit"
+          loading={loading}
           onPress={handleSubmit}
         />
       </View>
