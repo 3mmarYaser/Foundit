@@ -48,24 +48,26 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onDetect }) => {
       {isDetecting ? (
         <ActivityIndicator />
       ) : (
-        AppIcons.location(32, location ? Colors.primary : Colors.gray)
-      )}
+        <>
+          {AppIcons.location(32, location ? Colors.primary : Colors.gray)}
 
-      <Text
-        style={[
-          styles.placeholderText,
-          location
-            ? {
-                color: Colors.primary,
-                fontWeight: 'bold',
-              }
-            : undefined,
-        ]}
-      >
-        {location
-          ? `(${location.lat.toFixed(2)}, ${location.long.toFixed(2)})`
-          : 'Click to pick location'}
-      </Text>
+          <Text
+            style={[
+              styles.placeholderText,
+              location
+                ? {
+                    color: Colors.primary,
+                    fontWeight: 'bold',
+                  }
+                : undefined,
+            ]}
+          >
+            {location
+              ? `(${location.lat.toFixed(2)}, ${location.long.toFixed(2)})`
+              : 'Click to pick location'}
+          </Text>
+        </>
+      )}
     </Pressable>
   )
 }
