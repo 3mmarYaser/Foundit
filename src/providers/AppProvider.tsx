@@ -83,18 +83,18 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     )
   }, [])
 
-  const removeItem = useCallback(async (id: number) => {
+  const removeItem = useCallback(async (id: string) => {
     await removeItemUC(itemsRepo, id)
 
     setItems(current => current.filter(it => it.id !== id))
   }, [])
 
   const getItemById = useCallback(
-    async (id: number) => await itemsRepo.getById(id),
+    async (id: string) => await itemsRepo.getById(id),
     [],
   )
 
-  const toggleResolved = useCallback(async (id: number) => {
+  const toggleResolved = useCallback(async (id: string) => {
     await toggleResolvedUC(itemsRepo, id)
 
     setItems(current =>
