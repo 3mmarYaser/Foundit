@@ -2,6 +2,9 @@
 import NetInfo from '@react-native-community/netinfo'
 import { itemsSQLiteDS } from '../../data/sources/local/itemsSQLiteDS'
 import { itemsFirebaseDS } from '../../data/sources/remote/itemsFirebaseDS'
+import { supaStorageDS } from '../../data/sources/remote/supaStorageDS'
+import { cleanupCache } from '../storage/cache/cache.service'
+import { uriToArrayBuffer } from '../storage/helper'
 
 type ProgressCb = (msg: string, percent?: number) => void
 
@@ -20,6 +23,8 @@ export const syncService = {
     if (_isSyncing) return
 
     _isSyncing = true
+
+    await cleanupCache(24 * 7)
 
     const onProgress = opts?.onProgress
 
@@ -74,7 +79,9 @@ async function syncFromRemote(onProgress?: ProgressCb) {
 
       if (!local) {
         // Local missing -> insert remote
+
         await itemsSQLiteDS.upsert(remote)
+        await supaStorageDS.downloadImage(remote.photo_uri)
 
         onProgress?.(
           `Imported remote item ${remote.id}`,
@@ -82,7 +89,9 @@ async function syncFromRemote(onProgress?: ProgressCb) {
         )
       } else if ((remote.updated_at ?? 0) > (local.updated_at ?? 0)) {
         // Remote is newer -> overwrite local
+
         await itemsSQLiteDS.upsert(remote)
+        await supaStorageDS.downloadImage(remote.photo_uri)
 
         onProgress?.(
           `Updated local item ${remote.id}`,
@@ -117,7 +126,13 @@ async function syncToRemote(onProgress?: ProgressCb) {
 
       if (!remote) {
         // Remote missing -> create remote
+
         await itemsFirebaseDS.upsert(local)
+
+        const imageName = local.photo_uri
+        const uri = await uriToArrayBuffer(imageName)
+
+        await supaStorageDS.uploadImage(imageName, uri)
 
         onProgress?.(
           `Created remote item ${local.id}`,
@@ -125,7 +140,13 @@ async function syncToRemote(onProgress?: ProgressCb) {
         )
       } else if ((local.updated_at ?? 0) > (remote.updated_at ?? 0)) {
         // Local is newer -> overwrite remote
+
         await itemsFirebaseDS.upsert(local)
+
+        const imageName = local.photo_uri
+        const uri = await uriToArrayBuffer(imageName)
+
+        await supaStorageDS.uploadImage(imageName, uri)
 
         onProgress?.(
           `Updated remote item ${local.id}`,
@@ -139,42 +160,3 @@ async function syncToRemote(onProgress?: ProgressCb) {
     }
   }
 }
-
-// import { itemsSQLiteDS } from '../../data/sources/local/itemsSQLiteDS'
-// import { itemsFirebaseDS } from '../../data/sources/remote/itemsFirebaseDS'
-
-// /**
-//  * Two-way sync:
-//  *  - Pull remote items, upsert locally
-//  *  - Push local items to remote (upsert)
-//  *
-//  * Conflict resolution: last updated wins (based on updated_at).
-//  */
-
-// export const syncService = {
-//   async syncFromRemote(): Promise<void> {
-//     // fetch remote
-//     const remoteItems = await itemsFirebaseDS.getAll()
-//     // upsert locally
-//     for (const r of remoteItems) {
-//       await itemsSQLiteDS.upsert(r)
-//     }
-//   },
-
-//   async syncToRemote(): Promise<void> {
-//     const local = await itemsSQLiteDS.getAll()
-//     for (const l of local) {
-//       try {
-//         await itemsFirebaseDS.upsert(l)
-//       } catch (err) {
-//         console.warn('syncToRemote: upsert failed for id', l.id, err)
-//       }
-//     }
-//   },
-
-//   async fullSync(): Promise<void> {
-//     // Optionally: perform remote->local first (so we don't overwrite remote with stale local)
-//     await this.syncFromRemote()
-//     await this.syncToRemote()
-//   },
-// }
