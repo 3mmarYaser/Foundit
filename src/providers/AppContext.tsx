@@ -12,7 +12,10 @@ type AppContextType = {
   removeItem: (id: number) => void
   getItemById: (id: number) => Promise<Item | null>
   toggleResolved: (id: number) => void
-  sync: (tab?: ItemType) => Promise<void>
+  sync: (opts?: {
+    tab?: ItemType
+    onProgress?: (msg: string) => void
+  }) => Promise<void>
   imageNameToUri: (imageName: string) => string
 }
 
