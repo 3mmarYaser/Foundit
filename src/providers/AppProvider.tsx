@@ -8,6 +8,7 @@ import { updateItemUC } from '../domain/usecases/UpdateItemUC'
 import { removeItemUC } from '../domain/usecases/RemoveItemUC'
 import { toggleResolvedUC } from '../domain/usecases/ToggleResolvedUC'
 import { syncService } from '../services/sync/syncService'
+import { imageNameToCachedUri } from '../services/storage/cache/cache.service'
 
 //
 
@@ -48,6 +49,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }
     },
     [], // repo impl is stable import
+  )
+
+  // Migrate name to cache uri
+  const imageNameToUri = useCallback(
+    (imageName: string) => imageNameToCachedUri(imageName),
+    [],
   )
 
   // ---- CRUD Actions ----
@@ -139,6 +146,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       getItemById,
       toggleResolved,
       sync,
+      imageNameToUri,
     }),
     [
       items,
@@ -152,6 +160,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       getItemById,
       toggleResolved,
       sync,
+      imageNameToUri,
     ],
   )
 

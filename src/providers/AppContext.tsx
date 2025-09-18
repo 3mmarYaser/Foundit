@@ -13,6 +13,7 @@ type AppContextType = {
   getItemById: (id: number) => Promise<Item | null>
   toggleResolved: (id: number) => void
   sync: (tab?: ItemType) => Promise<void>
+  imageNameToUri: (imageName: string) => string
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType)
