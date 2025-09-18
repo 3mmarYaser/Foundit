@@ -1,7 +1,8 @@
 import { Item, ItemStatus } from '../entities/Item'
 import { ItemRepoInterface } from '../repos/ItemRepoInterface'
+import { Platform } from 'react-native'
 
-export type ReportItemInput = Omit<Item, 'id' | 'created_at' | 'updated_at'>
+export type ReportItemInput = Omit<Item, 'created_at' | 'updated_at'>
 
 export const reportItemUC = async (
   repo: ItemRepoInterface,
@@ -12,8 +13,10 @@ export const reportItemUC = async (
   if (!input.photo_uri?.trim()) throw new Error('Photo is required')
 
   const now = Date.now()
-  const newItem: Omit<Item, 'id'> = {
+  const newItem: Item = {
     ...input,
+    // TOOD: use uuid
+    id: Date.now() + (Platform.OS == 'ios' ? 'i' : 'a'),
     status: input.status ?? ('open' as ItemStatus),
     created_at: now,
     updated_at: now,

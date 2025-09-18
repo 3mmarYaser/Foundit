@@ -5,15 +5,15 @@ export interface ItemRepoInterface {
 
   // Read
   getAll(): Promise<Item[]>
-  getById(id: number): Promise<Item | null>
+  getById(id: string): Promise<Item | null>
   getByType(type: ItemType): Promise<Item[]>
 
   // Create / Update / Delete
-  add(item: Omit<Item, 'id' | 'created_at' | 'updated_at'>): Promise<Item>
+  add(item: Omit<Item, 'created_at' | 'updated_at'>): Promise<Item>
   update(item: Item): Promise<void>
   upsert(item: Item): Promise<void>
-  remove(id: number): Promise<void>
+  remove(id: string): Promise<void>
 
   // Helpers
-  toggleResolved(id: number): Promise<void>
+  toggleResolved(id: string): Promise<void>
 }
