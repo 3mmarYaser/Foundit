@@ -76,3 +76,4 @@ yarn-error.log
 
 src-old/
 src/theme/typography.ts
+.env*
