@@ -1,7 +1,10 @@
 import { Item, ItemType } from '../../domain/entities/Item'
 import { ItemRepoInterface } from '../../domain/repos/ItemRepoInterface'
+import { saveToCache } from '../../services/storage/cache/cache.service'
+import { getExtFromUri, uriToArrayBuffer } from '../../services/storage/helper'
 import { itemsSQLiteDS } from '../sources/local/itemsSQLiteDS'
 import { itemsFirebaseDS } from '../sources/remote/itemsFirebaseDS'
+import { supaStorageDS } from '../sources/remote/supaStorageDS'
 
 export const itemsRepo: ItemRepoInterface = {
   async init() {
@@ -21,14 +24,25 @@ export const itemsRepo: ItemRepoInterface = {
   },
 
   async add(item: Omit<Item, 'id'>) {
-    // insert locally first
-    const saved = await itemsSQLiteDS.add(item)
+    // Cache image first
+    const buffer = await uriToArrayBuffer(item.photo_uri)
+    const imageName = `${Date.now()}.${getExtFromUri(item.photo_uri)}`
+
+    const cachePath = await saveToCache(imageName, buffer)
+    console.log(cachePath)
+
+    // insert locally
+    const saved = await itemsSQLiteDS.add({ ...item, photo_uri: imageName })
+
     // try remote sync but don't block on failure
     try {
+      // 1. Upload image if exists
+      await supaStorageDS.uploadImage(imageName, buffer)
       await itemsFirebaseDS.upsert(saved)
     } catch (err) {
       console.error('Remote upsert failed (add):', err)
     }
+
     return saved
   },
 
