@@ -28,8 +28,7 @@ export const itemsRepo: ItemRepoInterface = {
     const buffer = await uriToArrayBuffer(item.photo_uri)
     const imageName = `${Date.now()}.${getExtFromUri(item.photo_uri)}`
 
-    const cachePath = await saveToCache(imageName, buffer)
-    console.log(cachePath)
+    await saveToCache(imageName, buffer)
 
     // insert locally
     const saved = await itemsSQLiteDS.add({ ...item, photo_uri: imageName })
