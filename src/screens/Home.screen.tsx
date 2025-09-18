@@ -68,9 +68,13 @@ const HomeScreen = ({ navigation }: any) => {
             tintColor={Colors.accent}
           />
         }
-        contentContainerStyle={{
-          flex: 1,
-        }}
+        contentContainerStyle={
+          !items.length
+            ? {
+                flex: 1,
+              }
+            : undefined
+        }
         ListEmptyComponent={
           <View style={styles.noItemsView}>
             <Text style={styles.noItemsText}>
