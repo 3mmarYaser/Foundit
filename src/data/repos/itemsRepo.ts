@@ -26,7 +26,7 @@ export const itemsRepo: ItemRepoInterface = {
   async add(item: Item) {
     // Cache image first
     const buffer = await uriToArrayBuffer(item.photo_uri)
-    const imageName = `${Date.now()}.${getExtFromUri(item.photo_uri)}`
+    const imageName = `${item.id}.${getExtFromUri(item.photo_uri)}`
 
     await saveToCache(imageName, buffer)
 
