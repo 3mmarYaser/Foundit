@@ -34,12 +34,13 @@ export const itemMapper = {
   },
 
   toRemoteRow(item: Item): ItemRow {
-    return this.toRow(item)
-    // {
-    //   ...item,
-    //   description: item.description ?? null,
-    //   category: item.category ?? 'Unspecified',
-    //   is_resolved: item.status == 'resolved',
-    // }
+    return {
+      ...item,
+      description: item.description ?? null,
+      category: item.category ?? 'Unspecified',
+      is_resolved: item.status == 'resolved',
+      latitude: item.latitude ?? null,
+      longitude: item.longitude ?? null,
+    }
   },
 }
