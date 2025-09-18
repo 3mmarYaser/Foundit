@@ -48,33 +48,37 @@ const HomeScreen = ({ navigation }: any) => {
     <View style={styles.root}>
       <TopBar />
 
-      {items.length ? (
-        <FlatList
-          data={items}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => (
-            <ItemCard
-              item={mapItemImageName(item)}
-              onPress={() => handleOpenDetails(item.id)}
-            />
-          )}
-          style={styles.list}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              // Android spinner color
-              colors={[Colors.primary, Colors.secondary, Colors.accent]}
-              // iOS spinner color
-              tintColor={Colors.accent}
-            />
-          }
-        />
-      ) : (
-        <View style={styles.noItemsView}>
-          <Text style={styles.noItemsText}>No items yet</Text>
-        </View>
-      )}
+      <FlatList
+        data={items}
+        keyExtractor={item => String(item.id)}
+        renderItem={({ item }) => (
+          <ItemCard
+            item={mapItemImageName(item)}
+            onPress={() => handleOpenDetails(item.id)}
+          />
+        )}
+        style={styles.list}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            // Android spinner color
+            colors={[Colors.primary, Colors.secondary, Colors.accent]}
+            // iOS spinner color
+            tintColor={Colors.accent}
+          />
+        }
+        contentContainerStyle={{
+          flex: 1,
+        }}
+        ListEmptyComponent={
+          <View style={styles.noItemsView}>
+            <Text style={styles.noItemsText}>
+              No items{'\n'}Pull to refresh
+            </Text>
+          </View>
+        }
+      />
 
       <BottomNav
         activeTab={activeTab}
@@ -103,6 +107,9 @@ const styles = StyleSheet.create({
   noItemsText: {
     margin: 'auto',
     color: Colors.gray,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontSize: 14,
   },
 })
 
