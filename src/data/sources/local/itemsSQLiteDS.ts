@@ -13,14 +13,16 @@ export const itemsSQLiteDS = {
     await getDB() // getDB creates tables via schema
   },
 
-  async add(item: Omit<Item, 'id'>): Promise<Item> {
+  async add(item: Item): Promise<Item> {
     const db = await getDB()
     const row = itemMapper.toRow(item)
+
     const [result] = await db.executeSql(
       `INSERT INTO ${ITEMS_TABLE_NAME}
-        (type, title, description, category, is_resolved, latitude, longitude, photo_uri, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        (id, type, title, description, category, is_resolved, latitude, longitude, photo_uri, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
+        row.id,
         row.type,
         row.title,
         row.description,
@@ -33,46 +35,60 @@ export const itemsSQLiteDS = {
         row.updated_at,
       ],
     )
-    const id = result.insertId as number
-    return { ...item, id }
+
+    const id = result.rows.item(0) as Item
+    console.log(id)
+
+    return item
   },
 
   async getAll(): Promise<Item[]> {
     const db = await getDB()
+
     const [rs] = await db.executeSql(
       `SELECT * FROM ${ITEMS_TABLE_NAME} ORDER BY updated_at DESC;`,
     )
+
     const out: Item[] = []
     const len = rs.rows.length
 
     for (let i = 0; i < len; i++) {
       const row = rs.rows.item(i) as ItemRow
+
       out.push(itemMapper.toDomain(row))
     }
     return out
   },
 
-  async getById(id: number): Promise<Item | null> {
+  async getById(id: string): Promise<Item | null> {
     const db = await getDB()
+
     const [rs] = await db.executeSql(
       `SELECT * FROM ${ITEMS_TABLE_NAME} WHERE id = ?`,
       [id],
     )
+
     if (rs.rows.length === 0) return null
+
     const row = rs.rows.item(0) as ItemRow
+
     return itemMapper.toDomain(row)
   },
 
   async getByType(type: Item['type']): Promise<Item[]> {
     const db = await getDB()
+
     const [rs] = await db.executeSql(
       `SELECT * FROM ${ITEMS_TABLE_NAME} WHERE type = ? ORDER BY updated_at DESC;`,
       [type],
     )
+
     const out: Item[] = []
+
     for (let i = 0; i < rs.rows.length; i++) {
       out.push(itemMapper.toDomain(rs.rows.item(i) as ItemRow))
     }
+
     return out
   },
 
@@ -80,7 +96,7 @@ export const itemsSQLiteDS = {
     if (!item.id) throw new Error('update requires item.id')
 
     const db = await getDB()
-    const row = itemMapper.toRow(item as Omit<Item, 'id'>)
+    const row = itemMapper.toRow(item)
 
     await db.executeSql(
       `UPDATE ${ITEMS_TABLE_NAME}
@@ -104,12 +120,8 @@ export const itemsSQLiteDS = {
   async upsert(item: Item): Promise<void> {
     // Use INSERT OR REPLACE pattern with id; this will replace row if id exists.
     const db = await getDB()
-    const row = itemMapper.toRow(item as Omit<Item, 'id'>)
-    // If item.id is undefined, INSERT
-    if (!item.id) {
-      await this.add(item as Omit<Item, 'id'>)
-      return
-    }
+    const row = itemMapper.toRow(item)
+
     // INSERT OR REPLACE (keeps id)
     await db.executeSql(
       `INSERT OR REPLACE INTO ${ITEMS_TABLE_NAME}
@@ -131,14 +143,16 @@ export const itemsSQLiteDS = {
     )
   },
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const db = await getDB()
+
     await db.executeSql(`DELETE FROM ${ITEMS_TABLE_NAME} WHERE id = ?;`, [id])
   },
 
-  async toggleResolved(id: number): Promise<void> {
+  async toggleResolved(id: string): Promise<void> {
     const db = await getDB()
     const updated_at = Date.now()
+
     await db.executeSql(
       `UPDATE ${ITEMS_TABLE_NAME} SET is_resolved = 1 - is_resolved, updated_at = ? WHERE id = ?`,
       [updated_at, id],

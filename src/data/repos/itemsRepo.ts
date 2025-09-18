@@ -15,7 +15,7 @@ export const itemsRepo: ItemRepoInterface = {
     return itemsSQLiteDS.getAll()
   },
 
-  async getById(id: number) {
+  async getById(id) {
     return itemsSQLiteDS.getById(id)
   },
 
@@ -23,7 +23,7 @@ export const itemsRepo: ItemRepoInterface = {
     return itemsSQLiteDS.getByType(type)
   },
 
-  async add(item: Omit<Item, 'id'>) {
+  async add(item: Item) {
     // Cache image first
     const buffer = await uriToArrayBuffer(item.photo_uri)
     const imageName = `${Date.now()}.${getExtFromUri(item.photo_uri)}`

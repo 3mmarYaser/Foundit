@@ -1,4 +1,4 @@
-import { ItemType } from '../types/Item'
+import { ItemType } from '../domain/entities/Item'
 
 // Screen keys
 export const SCREEN_KEYS = {

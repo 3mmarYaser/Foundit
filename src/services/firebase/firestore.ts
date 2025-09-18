@@ -13,8 +13,8 @@ export const firestoreClient = {
     return snap.docs.map(d => d.data() as ItemRow)
   },
 
-  async getById(id: number): Promise<ItemRow | null> {
-    const doc = await firestore().collection(COLLECTION).doc(String(id)).get()
+  async getById(id: string): Promise<ItemRow | null> {
+    const doc = await firestore().collection(COLLECTION).doc(id).get()
 
     if (!doc.exists) return null
 
@@ -32,11 +32,11 @@ export const firestoreClient = {
 
     await firestore()
       .collection(COLLECTION)
-      .doc(String(item.id))
+      .doc(item.id)
       .set(item, { merge: true })
   },
 
-  async deleteRemote(id: number): Promise<void> {
-    await firestore().collection(COLLECTION).doc(String(id)).delete()
+  async deleteRemote(id: string): Promise<void> {
+    await firestore().collection(COLLECTION).doc(id).delete()
   },
 }

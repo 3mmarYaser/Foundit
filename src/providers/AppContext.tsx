@@ -9,10 +9,13 @@ type AppContextType = {
   selectTab: (tab: ItemType) => void
   addItem: (item: Item) => void
   updateItem: (item: Item) => void
-  removeItem: (id: number) => void
-  getItemById: (id: number) => Promise<Item | null>
-  toggleResolved: (id: number) => void
-  sync: (tab?: ItemType) => Promise<void>
+  removeItem: (id: string) => void
+  getItemById: (id: string) => Promise<Item | null>
+  toggleResolved: (id: string) => void
+  sync: (opts?: {
+    tab?: ItemType
+    onProgress?: (msg: string) => void
+  }) => Promise<void>
   imageNameToUri: (imageName: string) => string
 }
 

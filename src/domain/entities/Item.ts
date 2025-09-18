@@ -3,7 +3,7 @@ export type ItemType = 'lost' | 'found'
 export type ItemStatus = 'open' | 'resolved'
 
 export interface Item {
-  id?: number
+  id: string
   type: ItemType
   title: string
   description?: string

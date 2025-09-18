@@ -1,7 +1,7 @@
 import Geolocation from '@react-native-community/geolocation'
 import { Alert } from 'react-native'
 import { requestLocationPermission } from './Permissions.android'
-import { LatLong } from '@/types/LatLong'
+import { LatLong } from '../types/LatLong'
 
 //
 

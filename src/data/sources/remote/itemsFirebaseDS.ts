@@ -10,7 +10,7 @@ export const itemsFirebaseDS = {
     return remotes.map(r => itemMapper.toDomain(r))
   },
 
-  async getById(id: number): Promise<Item | null> {
+  async getById(id: string): Promise<Item | null> {
     const r = await firestoreClient.getById(id)
     return r ? itemMapper.toDomain(r) : null
   },
@@ -20,7 +20,7 @@ export const itemsFirebaseDS = {
     await firestoreClient.upsertRemote(remote)
   },
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await firestoreClient.deleteRemote(id)
   },
 }
