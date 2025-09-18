@@ -11,7 +11,8 @@ import PrimaryButton from '../components/PrimaryButton'
 type ItemDetailsRouteProp = RouteProp<RootStackParamList, 'ItemDetailsScreen'>
 
 const ItemDetailsScreen = () => {
-  const { getItemById, toggleResolved }: any = useContext(AppContext)
+  const { getItemById, toggleResolved, imageNameToUri }: any =
+    useContext(AppContext)
 
   const route = useRoute<ItemDetailsRouteProp>()
   const { itemId } = route.params
@@ -58,7 +59,7 @@ const ItemDetailsScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Photo */}
         <Image
-          source={{ uri: item.photo_uri }}
+          source={{ uri: imageNameToUri(item.photo_uri) }}
           style={styles.image}
           resizeMode="cover"
         />

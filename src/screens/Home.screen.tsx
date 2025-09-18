@@ -9,11 +9,12 @@ import AppContext from '../providers/AppContext'
 
 import { Colors } from '../theme/Colors'
 import { SCREEN_KEYS } from '../navigation/ScreenKeys'
+import { Item } from '../domain/entities/Item'
 
 //
 
 const HomeScreen = ({ navigation }: any) => {
-  const { items, activeTab, selectTab, isSyncing, sync }: any =
+  const { items, activeTab, selectTab, isSyncing, sync, imageNameToUri }: any =
     useContext(AppContext)
 
   const [refreshing, setRefreshing] = useState(isSyncing)
@@ -36,6 +37,13 @@ const HomeScreen = ({ navigation }: any) => {
     navigation.navigate(SCREEN_KEYS.ReportItem, { type: activeTab })
   }
 
+  const mapItemImageName = (item: Item) => ({
+    ...item,
+    photo_uri: imageNameToUri(item.photo_uri),
+  })
+
+  //
+
   return (
     <View style={styles.root}>
       <TopBar />
@@ -46,7 +54,7 @@ const HomeScreen = ({ navigation }: any) => {
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
             <ItemCard
-              item={item}
+              item={mapItemImageName(item)}
               onPress={() => handleOpenDetails(item.id)}
             />
           )}
