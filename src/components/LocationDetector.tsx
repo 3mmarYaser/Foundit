@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { Colors } from '../theme/Colors'
 import { AppIcons } from '../constants/icons'
@@ -12,15 +12,14 @@ interface LocationDetectorProps {
 
 const LocationDetector: React.FC<LocationDetectorProps> = ({ onDetect }) => {
   const [isDetecting, setDetecting] = useState(false)
-  const [location, setLocation] = useState<LatLong | null>(null)
+  const location = useRef<LatLong | null>(null)
 
   const handleDetectLocation = async () => {
     setDetecting(true)
 
     try {
-      setLocation(await detectLocation())
-
-      onDetect(location)
+      location.current = await detectLocation()
+      onDetect(location.current)
     } catch (e) {
       console.error(e)
       onDetect(null)
@@ -38,7 +37,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onDetect }) => {
       style={[
         GlobalStyle._dashed_border,
         styles.placeholderView,
-        location
+        location.current
           ? {
               borderColor: Colors.primaryLight,
             }
@@ -49,12 +48,15 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onDetect }) => {
         <ActivityIndicator />
       ) : (
         <>
-          {AppIcons.location(32, location ? Colors.primary : Colors.gray)}
+          {AppIcons.location(
+            32,
+            location.current ? Colors.primary : Colors.gray,
+          )}
 
           <Text
             style={[
               styles.placeholderText,
-              location
+              location.current
                 ? {
                     color: Colors.primary,
                     fontWeight: 'bold',
@@ -62,8 +64,10 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onDetect }) => {
                 : undefined,
             ]}
           >
-            {location
-              ? `(${location.lat.toFixed(2)}, ${location.long.toFixed(2)})`
+            {location.current
+              ? `(${location.current.lat.toFixed(
+                  2,
+                )}, ${location.current.long.toFixed(2)})`
               : 'Click to pick location'}
           </Text>
         </>
