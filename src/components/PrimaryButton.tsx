@@ -22,7 +22,7 @@ const PrimaryButton = ({ title, loading, onPress, style }: Props) => {
       onPress={onPress}
     >
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator color={Colors.white} />
       ) : (
         <Text style={styles.text}>{title}</Text>
       )}
