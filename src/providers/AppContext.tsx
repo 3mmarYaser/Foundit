@@ -1,12 +1,13 @@
-import { createContext } from 'react'
-import { Item, ItemType } from '../domain/entities/Item'
+import { createContext, RefObject } from 'react'
+import { Item } from '../domain/entities/Item'
+import { ActiveTab } from '../types/Tab'
 
 type AppContextType = {
   items: Item[]
   loading: boolean
-  activeTab: ItemType
+  activeTab: RefObject<ActiveTab>
   isSyncing: boolean
-  selectTab: (tab: ItemType) => void
+  selectTab: (tab: ActiveTab) => void
   addItem: (item: Item) => void
   updateItem: (item: Item) => void
   removeItem: (id: string) => void

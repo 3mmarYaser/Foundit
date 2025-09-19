@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppContext from './AppContext'
 
-import { Item, ItemType } from '../domain/entities/Item'
+import { Item } from '../domain/entities/Item'
 import { itemsRepo } from '../data/repos/itemsRepo'
 import { reportItemUC } from '../domain/usecases/ReportItemUC'
 import { updateItemUC } from '../domain/usecases/UpdateItemUC'
@@ -9,12 +9,13 @@ import { removeItemUC } from '../domain/usecases/RemoveItemUC'
 import { toggleResolvedUC } from '../domain/usecases/ToggleResolvedUC'
 import { syncService } from '../services/sync/syncService'
 import { imageNameToCachedUri } from '../services/storage/cache/cache.service'
+import { ActiveTab, tabToType } from '../types/Tab'
 
 //
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   //
-  const [activeTab, setActiveTab] = useState<ItemType>('found')
+  const activeTab = useRef<ActiveTab>(ActiveTab.Found)
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -24,7 +25,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const init = async () => {
       await itemsRepo.init()
-      const initial = await itemsRepo.getByType(activeTab)
+      const initial = await itemsRepo.getByType(tabToType(activeTab.current))
       setItems(initial)
       setLoading(false)
     }
@@ -33,12 +34,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Helper to load items for a tab (cancellation-safe)
   const loadItemsByTab = useCallback(
-    async (tab: ItemType) => {
+    async (tab: ActiveTab) => {
       setLoading(true)
       setError(null)
 
       try {
-        const list = await itemsRepo.getByType(tab)
+        const list = await itemsRepo.getByType(tabToType(tab))
         setItems(list)
       } catch (err: any) {
         console.warn('loadItemsByTab error', err)
@@ -58,9 +59,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   )
 
   // ---- CRUD Actions ----
-  const selectTab = useCallback(async (tab: ItemType) => {
-    setActiveTab(tab)
-    const filtered = await itemsRepo.getByType(tab)
+  const selectTab = useCallback(async (tab: ActiveTab) => {
+    activeTab.current = tab
+    const filtered = await itemsRepo.getByType(tabToType(tab))
     setItems(filtered)
   }, [])
 
@@ -68,8 +69,10 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     async (item: Item) => {
       const newItem = await reportItemUC(itemsRepo, item)
 
-      if (newItem.type === activeTab) {
-        setItems(current => [...current, newItem])
+      if (newItem.type == tabToType(activeTab.current)) {
+        setItems(current =>
+          [...current, newItem].sort((a, b) => b.created_at - a.created_at),
+        )
       }
     },
     [activeTab],
