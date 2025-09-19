@@ -3,10 +3,11 @@ import { View, StyleSheet } from 'react-native'
 import { Colors } from '../theme/Colors'
 import FAB from './FAB'
 import TabButton from './TabButton'
+import { ActiveTab } from '../types/Tab'
 
 interface BottomNavProps {
-  activeTab: 'lost' | 'found'
-  onTabChange: (tab: 'lost' | 'found') => void
+  activeTab: ActiveTab
+  onTabChange: (tab: ActiveTab) => void
   onAdd: () => void
 }
 
@@ -19,18 +20,16 @@ const BottomNav: React.FC<BottomNavProps> = ({
     <View style={styles.root}>
       {/* Found Tab */}
       <TabButton
-        label="Found"
-        type="found"
-        isActive={activeTab === 'found'}
-        onPress={() => onTabChange('found')}
+        tab={ActiveTab.Found}
+        isActive={activeTab === ActiveTab.Found}
+        onPress={() => onTabChange(ActiveTab.Found)}
       />
 
       {/* Lost Tab */}
       <TabButton
-        label="Lost"
-        type="lost"
-        isActive={activeTab === 'lost'}
-        onPress={() => onTabChange('lost')}
+        tab={ActiveTab.Lost}
+        isActive={activeTab === ActiveTab.Lost}
+        onPress={() => onTabChange(ActiveTab.Lost)}
       />
 
       {/* FAB */}

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet } from 'react-native'
 import { Colors } from '../theme/Colors'
 import { AppIcons } from '../constants/icons'
 import AppContext from '../providers/AppContext'
-import { ItemTypes } from '../domain/entities/Item'
+import { ActiveTab } from '../types/Tab'
 
 interface FABProps {
   onPress: () => void
@@ -16,7 +16,7 @@ const FAB: React.FC<FABProps> = ({ onPress }) => {
     <Pressable
       style={[
         styles.fab,
-        activeTab == ItemTypes.Found ? styles.found : styles.lost,
+        activeTab.current == ActiveTab.Found ? styles.found : styles.lost,
       ]}
       onPress={onPress}
     >

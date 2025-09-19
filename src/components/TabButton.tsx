@@ -2,18 +2,16 @@ import React from 'react'
 import { Pressable, Text, StyleSheet } from 'react-native'
 import { Colors } from '../theme/Colors'
 import { AppIcons } from '../constants/icons'
-import { ItemTypes } from '../domain/entities/Item'
+import { ActiveTab } from '../types/Tab'
 
 interface TabButtonProps {
-  label: string
-  type: ItemTypes
+  tab: ActiveTab
   isActive?: boolean
   onPress?: () => void
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
-  label,
-  type,
+  tab,
   isActive = false,
   onPress,
 }) => {
@@ -22,13 +20,13 @@ const TabButton: React.FC<TabButtonProps> = ({
       onPress={onPress}
       style={[
         styles.tabBase,
-        isActive && type === ItemTypes.Lost && styles.lost,
-        isActive && type === ItemTypes.Found && styles.found,
+        isActive && tab === ActiveTab.Lost && styles.lost,
+        isActive && tab === ActiveTab.Found && styles.found,
       ]}
     >
-      {type == ItemTypes.Found ? AppIcons.found(16) : AppIcons.lost(16)}
+      {tab == ActiveTab.Found ? AppIcons.found(16) : AppIcons.lost(16)}
 
-      <Text style={[styles.label]}>{label}</Text>
+      <Text style={[styles.label]}>{tab}</Text>
 
       {/* {type == 'lost' ? AppIcons.lost(16) : ''} */}
     </Pressable>
