@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android:clean": "cd android; rm -rf {build,app/{build,.cxx}}; ./gradlew clean; cd ..",
     "ios": "react-native run-ios",
     "ios:clean": "cd ios && rm -rf build/ && rm -rf Podfile.lock && pod deintegrate && rm -rf Pods/ && pod install",
     "lint": "eslint .",
