@@ -84,6 +84,10 @@ export async function clearCache() {
 // -------- CACHE CLEANUP --------
 //
 export async function cleanupCache(olderThanHours = 24) {
+  const exists = await RNFS.exists(CACHE_DIR)
+
+  if (!exists) return
+
   const files = await RNFS.readDir(CACHE_DIR)
   const now = Date.now()
 
