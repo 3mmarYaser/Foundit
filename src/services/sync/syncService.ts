@@ -41,10 +41,10 @@ export const syncService = {
       }
 
       onProgress?.('Syncing: pulling remote changes (1/2)...')
-      await syncFromRemote(onProgress)
+      await pull(onProgress)
 
       onProgress?.('Syncing: pushing local changes (2/2)...')
-      await syncToRemote(onProgress)
+      await push(onProgress)
 
       onProgress?.('Sync complete')
     } catch (err) {
@@ -60,7 +60,7 @@ export const syncService = {
    Internal helpers
    ------------------------- */
 
-async function syncFromRemote(onProgress?: ProgressCb) {
+async function pull(onProgress?: ProgressCb) {
   const remoteItems = await itemsFirebaseDS.getAll()
   const total = remoteItems.length
   let idx = 0
@@ -101,12 +101,12 @@ async function syncFromRemote(onProgress?: ProgressCb) {
         // local is newer or same -> nothing to do
       }
     } catch (err) {
-      console.warn(`syncFromRemote: failed for remote id ${remote.id}`, err)
+      console.warn(`pull: failed for remote id ${remote.id}`, err)
     }
   }
 }
 
-async function syncToRemote(onProgress?: ProgressCb) {
+async function push(onProgress?: ProgressCb) {
   const localItems = await itemsSQLiteDS.getAll()
   const total = localItems.length
   let idx = 0
@@ -156,7 +156,7 @@ async function syncToRemote(onProgress?: ProgressCb) {
         // remote is newer or same -> nothing to do
       }
     } catch (err) {
-      console.warn(`syncToRemote: failed for local id ${local.id}`, err)
+      console.warn(`push: failed for local id ${local.id}`, err)
     }
   }
 }
