@@ -16,15 +16,12 @@ export const storageClient = {
     return imageName
   },
 
-  async downloadItemImage(imageName: string): Promise<ArrayBuffer> {
     const { data, error } = await supabase.storage.from(BUCKET).download(imageName)
+  async downloadItemImage(imageName: string): Promise<Blob> {
 
     if (error) throw error
 
-    const arrayBuffer = await data.arrayBuffer()
-    // const buffer = Buffer.from(arrayBuffer)
-
-    return arrayBuffer
+    return data
   },
 
   async deleteItemImage(name: string) {
