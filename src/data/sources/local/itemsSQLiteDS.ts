@@ -36,9 +36,6 @@ export const itemsSQLiteDS = {
       ],
     )
 
-    const id = result.rows.item(0) as Item
-    console.log(id)
-
     return item
   },
 
@@ -46,7 +43,7 @@ export const itemsSQLiteDS = {
     const db = await getDB()
 
     const [rs] = await db.executeSql(
-      `SELECT * FROM ${ITEMS_TABLE_NAME} ORDER BY updated_at DESC;`,
+      `SELECT * FROM ${ITEMS_TABLE_NAME} ORDER BY created_at DESC;`,
     )
 
     const out: Item[] = []
@@ -79,7 +76,7 @@ export const itemsSQLiteDS = {
     const db = await getDB()
 
     const [rs] = await db.executeSql(
-      `SELECT * FROM ${ITEMS_TABLE_NAME} WHERE type = ? ORDER BY updated_at DESC;`,
+      `SELECT * FROM ${ITEMS_TABLE_NAME} WHERE type = ? ORDER BY created_at DESC;`,
       [type],
     )
 
