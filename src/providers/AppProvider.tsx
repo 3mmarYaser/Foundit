@@ -122,11 +122,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         await syncService.fullSync({
           onProgress: (msg, _pct) => onProgress?.(msg),
         })
-        console.log('synced', tab)
 
         // reload local items for either provided tab or current activeTab
         const tabToReload = tab ?? activeTab.current
-        console.log('tabToReload:', tabToReload)
 
         await loadItemsByTab(tabToReload)
       } catch (err) {
