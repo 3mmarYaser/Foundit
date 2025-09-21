@@ -5,8 +5,10 @@ const BUCKET = 'items'
 //
 
 export const storageClient = {
+  bucket: () => supabase.storage.from(BUCKET),
+
   async uploadItemImage(imageName: string, buffer: ArrayBuffer) {
-    const { error } = await supabase.storage.from(BUCKET).upload(imageName, buffer, {
+    const { error } = await this.bucket().upload(imageName, buffer, {
       contentType: `image/${imageName.split('.').pop()}`,
       upsert: true,
     })
@@ -16,8 +18,8 @@ export const storageClient = {
     return imageName
   },
 
-    const { data, error } = await supabase.storage.from(BUCKET).download(imageName)
   async downloadItemImage(imageName: string): Promise<Blob> {
+    const { data, error } = await this.bucket().download(imageName)
 
     if (error) throw error
 
@@ -25,7 +27,7 @@ export const storageClient = {
   },
 
   async deleteItemImage(name: string) {
-    const { error } = await supabase.storage.from(BUCKET).remove([name])
+    const { error } = await this.bucket().remove([name])
 
     if (error) throw error
 
