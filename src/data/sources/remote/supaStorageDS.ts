@@ -15,9 +15,9 @@ export const supaStorageDS = {
     let cached = await getFromCache(imageName)
 
     if (!cached) {
-      const buffer = await storageClient.downloadItemImage(imageName)
+      const blob = await storageClient.downloadItemImage(imageName)
 
-      cached = await saveToCache(imageName, buffer)
+      cached = await saveToCache(imageName, blob)
     }
 
     return cached

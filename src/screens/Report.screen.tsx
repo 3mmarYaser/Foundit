@@ -11,7 +11,7 @@ import LocationDetector from '../components/LocationDetector'
 import { ItemType, ItemTypes } from '../domain/entities/Item'
 import { styles } from './Report.style'
 import { LatLong } from '../types/LatLong'
-import { ActiveTab } from '../types/Tab'
+import { typeToTab } from '../types/Tab'
 import { capturePhoto } from '../helpers/Camera'
 import { pickImageFromGallery } from '../helpers/Gallery'
 
@@ -114,7 +114,7 @@ const ReportItemScreen = ({ route, navigation }: any) => {
 
           {/* Image Picker */}
           <ImagePicker
-            tab={type == 'found' ? ActiveTab.Found : ActiveTab.Lost}
+            tab={typeToTab(type)}
             photoUri={photoUri}
             onPickCamera={handleCaptureImage}
             onPickGallery={handlePickFromGallery}

@@ -10,6 +10,7 @@ import AppContext from '../providers/AppContext'
 import { Colors } from '../theme/Colors'
 import { SCREEN_KEYS } from '../navigation/ScreenKeys'
 import { Item } from '../domain/entities/Item'
+import { tabToType } from '../types/Tab'
 
 //
 
@@ -34,7 +35,9 @@ const HomeScreen = ({ navigation }: any) => {
   }
 
   const handleAdd = () => {
-    navigation.navigate(SCREEN_KEYS.ReportItem, { type: activeTab })
+    navigation.navigate(SCREEN_KEYS.ReportItem, {
+      type: tabToType(activeTab.current),
+    })
   }
 
   const mapItemImageName = (item: Item) => ({
@@ -85,7 +88,7 @@ const HomeScreen = ({ navigation }: any) => {
       />
 
       <BottomNav
-        activeTab={activeTab}
+        activeTab={activeTab.current}
         onTabChange={selectTab}
         onAdd={handleAdd}
       />
