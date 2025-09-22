@@ -1,6 +1,6 @@
 # Foundit
 
-Lost & Found tracker with camera + GPS + SQLite.
+Lost & Found tracker with Camera + Gallery + GPS + SQLite + Firebase + Supabase.
 
 ### Features
 
@@ -9,7 +9,7 @@ Lost & Found tracker with camera + GPS + SQLite.
 - Determine type either lost or found
 - Add title, description, and category
 - Local SQLite storage
-- Remote Firebase integration
+- Remote Firebase & Supabase integration
 - Search & filter, mark resolved
 
 ### Tech Choices
@@ -18,7 +18,7 @@ Lost & Found tracker with camera + GPS + SQLite.
 - **Navigation:** `@react-navigation/native` (Stack).
 - **Camera:** `react-native-vision-camera` • `react-native-image-picker`.
 - **Location:** `react-native-geolocation-service`.
-- **DB:** `react-native-sqlite-storage` (promise API).
+- **DB:** `react-native-sqlite-storage`, `@react-native-firebase/firestore`, `@supabase/supabase-js`
 - **State:** lightweight Context.
 
 ### Future plan
@@ -26,6 +26,88 @@ Lost & Found tracker with camera + GPS + SQLite.
 - Map integration: Swap list/map views.
 - Push notifications, chat between users.
 - OCR / similarity matching.
+
+---
+---
+
+### File structure
+
+```
+src
+├── components
+│   ├── BottomNav.tsx
+│   ├── FAB.tsx
+│   ├── ImagePicker.tsx
+│   ├── InputField.tsx
+│   ├── ItemCard.tsx
+│   ├── LocationDetector.tsx
+│   ├── PrimaryButton.tsx
+│   ├── TabButton.tsx
+│   └── TopBar.tsx
+├── constants
+│   └── icons.tsx
+├── data
+│   ├── mappers
+│   │   └── itemMapper.ts
+│   ├── repos
+│   │   └── itemsRepo.ts
+│   └── sources
+│       ├── local
+│       │   ├── itemsSQLiteDS.ts
+│       │   └── schema.ts
+│       └── remote
+│           ├── itemsFirebaseDS.ts
+│           └── supaStorageDS.ts
+├── domain
+│   ├── entities
+│   │   └── Item.ts
+│   ├── repos
+│   │   └── ItemRepoInterface.ts
+│   └── usecases
+│       ├── RemoveItemUC.ts
+│       ├── ReportItemUC.ts
+│       ├── ToggleResolvedUC.ts
+│       └── UpdateItemUC.ts
+├── helpers
+│   ├── Camera.ts
+│   ├── Gallery.ts
+│   ├── Location.ts
+│   └── Permissions.android.ts
+├── navigation
+│   ├── NavStack.tsx
+│   ├── ScreenKeys.ts
+│   └── Screens.tsx
+├── providers
+│   ├── AppContext.tsx
+│   └── AppProvider.tsx
+├── screens
+│   ├── Details.screen.tsx
+│   ├── Details.style.tsx
+│   ├── Home.screen.tsx
+│   ├── Report.screen.tsx
+│   └── Report.style.tsx
+├── services
+│   ├── db
+│   │   └── sqlite.ts
+│   ├── firebase
+│   │   └── firestore.ts
+│   ├── storage
+│   │   ├── cache
+│   │   │   └── cache.service.ts
+│   │   ├── helper.ts
+│   │   └── supabase
+│   │       ├── client.ts
+│   │       └── storage.service.ts
+│   └── sync
+│       └── syncService.ts
+├── theme
+│   ├── Colors.ts
+│   ├── Global.style.tsx
+│   └── typography.ts
+└── types
+    ├── LatLong.ts
+    └── Tab.ts
+```
 
 ---
 ---

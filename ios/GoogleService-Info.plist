@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.foundit</string>
+	<string>org.reactjs.native.example.Foundit</string>
 	<key>PROJECT_ID</key>
 	<string>foundit-14925</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:314434701695:ios:7b7e8469ebb64713fa724a</string>
+	<string>1:314434701695:ios:11bd8628ca8feae9fa724a</string>
 </dict>
 </plist>
