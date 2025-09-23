@@ -2,6 +2,8 @@
 
 Lost & Found tracker with Camera + Gallery + GPS + SQLite + Firebase + Supabase.
 
+> _Show demo on [YouTube](https://youtube.com/shorts/mbxrZXxTBrM)_
+  
 ### Features
 
 - Capture item photo / attach image
