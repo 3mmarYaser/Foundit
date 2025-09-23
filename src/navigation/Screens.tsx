@@ -5,6 +5,7 @@ import { RootStackParamList, SCREEN_KEYS } from './ScreenKeys'
 import HomeScreen from '../screens/Home.screen'
 import ItemDetailsScreen from '../screens/Details.screen'
 import ReportItemScreen from '../screens/Report.screen'
+import SplashScreen from '../screens/Splash.screen'
 
 //
 // Define screens in a data-driven list
@@ -13,6 +14,10 @@ export const Screens: {
   component: React.ComponentType<any>
   options?: object
 }[] = [
+  {
+    name: SCREEN_KEYS.Splash,
+    component: SplashScreen,
+  },
   {
     name: SCREEN_KEYS.Home,
     component: HomeScreen,
