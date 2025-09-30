@@ -87,7 +87,8 @@ src
 │   ├── Details.style.tsx
 │   ├── Home.screen.tsx
 │   ├── Report.screen.tsx
-│   └── Report.style.tsx
+│   ├── Report.style.tsx
+│   └── Splash.screen.tsx
 ├── services
 │   ├── db
 │   │   └── sqlite.ts
